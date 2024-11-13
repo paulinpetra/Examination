@@ -9,8 +9,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        snow: "#F4F3F1",
+        ash: "#EEEEEE",
+        clay: "#605858",
+        coal: "#353131",
+        "dark-mint": "#489078",
+        "shade-24-dark": "rgba(53, 49, 49, .24)",
+        "shade-24-light": "rgba(241, 240, 236, .24)",
+        "shade-12-light": "rgba(241, 240, 236, .12)",
+        red: "#EB5757",
       },
     },
   },
