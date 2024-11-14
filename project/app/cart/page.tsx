@@ -9,6 +9,7 @@ import Image from "next/image";
 const CartPage: React.FC = () => {
   const { cart, cartTotal } = useCart();
   const router = useRouter();
+  const [eta, setEta] = useState<string | null>(null);
 
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
@@ -19,27 +20,34 @@ const CartPage: React.FC = () => {
       // Extract just the item IDs from the cart
       const itemIds = cart.map((item: Wonton | Dip | Drink) => item.id);
 
-      console.log("Item IDs to be sent:", itemIds);
-
       // Send the item IDs to the API
-      await postOrder(itemIds); // We are ignoring the result for this version
+      const orderData = await postOrder(itemIds);
+      // Extract eta from the nested order object and calculate time in minutes
+      const etaTimestamp = new Date(orderData.order.eta);
+      const currentTime = new Date();
+      const timeInMinutes = Math.ceil(
+        (etaTimestamp.getTime() - currentTime.getTime()) / 60000
+      ); // Convert milliseconds to minutes
 
-      // No need to handle success or failure in terms of UI anymore, just show the pop-up
+      setEta(timeInMinutes.toString()); // Convert to string for display
     } catch (error) {
       console.error("Error placing order:", error);
-      // We won't show any error message, just show the pop-up as if it worked
+      alert("An error occurred while placing your order. Please try again.");
     }
-
-    // Always show the popup after trying to place the order
+    // Show the popup after trying to place the order
     setIsPopupVisible(true);
   };
 
   const handleClosePopup = () => {
     setIsPopupVisible(false);
+    setEta(null);
   };
 
   return (
     <div className="p-4 bg-light-gray min-h-screen">
+      <div className="flex justify-end">
+        <Image src="/assets/cart.svg" alt="cart" width={30} height={30} />
+      </div>
       {/* Cart Items List */}
       <ul className="space-y-4">
         {cart.map((item: Wonton | Dip | Drink) => (
@@ -58,7 +66,7 @@ const CartPage: React.FC = () => {
       </ul>
 
       {/* Total Price */}
-      <div className="mt-6 flex justify-between items-center">
+      <div className="mt-6 w-full bg-shade-24-dark text-white p-3 rounded text-xl font-semibold flex justify-between">
         <span className="text-lg font-bold text-black">TOTALT</span>
         <span className="text-lg font-bold text-black">{cartTotal} SEK</span>
       </div>
@@ -66,7 +74,7 @@ const CartPage: React.FC = () => {
       {/* Place Order Button */}
       <button
         onClick={handlePlaceOrder}
-        className="mt-6 w-full bg-coal text-white p-3 rounded text-xl font-semibold hover:bg-blue-600"
+        className="mt-6 w-full bg-coal text-white p-3 rounded text-xl font-semibold"
       >
         TAKE MY MONEY!
       </button>
@@ -82,7 +90,7 @@ const CartPage: React.FC = () => {
               height={500}
             />
             <h2 className="text-4xl font-bold mb-6">DINA WONTON TILLAGAS!</h2>
-            <p className="text-xl mb-6">ETA 5 MIN</p>
+            <p className="text-xl mb-6">ETA {eta} MIN</p>
             <p className="text-xs">#4KJWDSD2</p>
             <button className="mt-6 w-full bg-clay text-white border-2 border-white p-3 rounded text-xl font-semibold">
               SE KVITTO

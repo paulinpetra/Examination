@@ -11,7 +11,7 @@ async function postOrder(itemIds: number[]) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": API_KEY,
+        "x-zocom": API_KEY,
       },
       body: JSON.stringify({ items: itemIds }),
     });

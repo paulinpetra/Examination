@@ -42,7 +42,7 @@ export type Order = {
   id: number | string;
   items: (Wonton | Dip | Drink)[] | number[]; // Either full items or just item IDs (for request)
   orderValue: number;
-  eta: number | string;
+  eta: string;
   timestamp: string;
   state: OrderState;
 };
