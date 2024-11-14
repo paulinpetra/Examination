@@ -1,9 +1,10 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { Wonton, Dip, Drink, Menu, Receipt } from "@/types/types";
+import { createContext, useContext, useState } from "react";
+import { Wonton, Dip, Drink } from "@/types/types";
 
 const BASE_URL = "https://fdnzawlcf6.execute-api.eu-north-1.amazonaws.com";
 const API_KEY = "yum-B2mWxADrthdHqd22";
+const TENANT_ID = "ppmm";
 
 // Define item types for cart items
 type CartItem = Wonton | Dip | Drink;
@@ -15,7 +16,6 @@ type CartContextType = {
   removeItemFromCart: (item: CartItem) => void;
   clearCart: () => void;
   cartTotal: number;
-  submitOrder: () => Promise<Receipt | null>;
 };
 
 // Create CartContext with default values
@@ -45,32 +45,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   // Clear the cart
   const clearCart = () => setCart([]);
 
-  // Submit order to API
-  const submitOrder = async (): Promise<Receipt | null> => {
-    try {
-      const itemIds = cart.map((item) => item.id);
-      const response = await fetch(`${BASE_URL}/ppmm/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": API_KEY,
-        },
-        body: JSON.stringify({ items: itemIds }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to submit order");
-      }
-
-      const receipt: Receipt = await response.json();
-      clearCart(); // Clear cart after successful submission
-      return receipt;
-    } catch (error) {
-      console.error("Error submitting order:", error);
-      return null;
-    }
-  };
-
   // Value to be provided by context
   const value = {
     cart,
@@ -78,7 +52,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     removeItemFromCart,
     clearCart,
     cartTotal,
-    submitOrder,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

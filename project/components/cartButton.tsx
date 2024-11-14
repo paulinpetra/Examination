@@ -14,8 +14,10 @@ const CartButton: React.FC<CartButtonProps> = ({ cartCount, onClick }) => {
       >
         <Image src="/assets/cart.svg" alt="cart" width={30} height={30} />
       </button>
+      {/* Display cart count if items are in the cart */}
+
       {cartCount > 0 && (
-        <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+        <span className="absolute top-0 right-0 bg-red text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
           {cartCount}
         </span>
       )}

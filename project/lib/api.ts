@@ -2,11 +2,12 @@
 //API helper functions
 const BASE_URL = "https://fdnzawlcf6.execute-api.eu-north-1.amazonaws.com";
 const API_KEY = "yum-B2mWxADrthdHqd22";
+const TENANT_ID = "ppmm";
 
 // Function to post an order
-async function postOrder(tenant: string, itemIds: number[]) {
+async function postOrder(itemIds: number[]) {
   try {
-    const response = await fetch(`${BASE_URL}/${tenant}/orders`, {
+    const response = await fetch(`${BASE_URL}/${TENANT_ID}/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,25 +28,4 @@ async function postOrder(tenant: string, itemIds: number[]) {
     throw error;
   }
 }
-
-// Function to get orders
-async function getOrders(tenant: string) {
-  try {
-    const response = await fetch(`${BASE_URL}/${tenant}/orders`, {
-      headers: {
-        "x-api-key": API_KEY,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch orders");
-    }
-
-    const data = await response.json();
-    console.log("Orders fetched successfully:", data);
-    return data;
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-    throw error;
-  }
-}
+export { postOrder };

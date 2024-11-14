@@ -67,6 +67,8 @@ export default function MenuPage() {
   return (
     <main className="bg-dark-mint min-h-screen flex flex-col items-start px-4">
       <div className="flex justify-end items-center w-full p-4">
+        {/* Pass the cart length as cartCount to CartButton */}
+
         <CartButton cartCount={cart.length} onClick={handleCartClick} />
       </div>
       <h1 className="text-snow font-bold text-4xl text-left w-full max-w-md">
